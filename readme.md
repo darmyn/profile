@@ -12,14 +12,26 @@ It's very simple to create a new profile:
 local profile = Profile.new(player)
 ```
 
-You can optionally pass a custom load function which will replace the default loader.
-
-*this is just an example of how you would create a custom loader function. It does not follow the standard practices of loading data to keep it short and simple. If you wish to view the default loader function, check the source code for a function named `standardLoader`.*
+You can optionally pass a custom load function which will replace the default loader. This is an example of using your own custom loader:
 
 ```lua
-local profile = Profile.new(player, function(self: profile)
-   local dataStore = self.dataStore
-   dataStore:GetAsync(self.key)
+local profile = Profile.new(player, function (self: profile)
+	local dataStore = self.dataStore
+	for attempt = 0, self.retries do
+		print("tryng")
+		local success, result = pcall(self.dataStore.GetAsync, self.dataStore, self.key)
+		if success then
+			if result then
+				return result
+			else
+				return template()
+			end
+		else
+			warn(result)
+		end
+	end
+	self.player:Kick("We could not load your data at this time.")
+	return nil
 end
 ```
 
