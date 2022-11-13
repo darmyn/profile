@@ -16,8 +16,7 @@ You can optionally pass a custom load function which will replace the default lo
 
 ```lua
 local profile = Profile.new(player, function (self: profile)
-	local dataStore = self.dataStore
-	for attempt = 0, self.retries do
+	for _ = 0, self.retries do
 		local success, result = pcall(self.dataStore.GetAsync, self.dataStore, self.key)
 		if success then
 			if result then
