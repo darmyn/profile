@@ -14,7 +14,7 @@ profile.active = {
 	profiles = {} :: {[Player]: profile}
 }
 
-local function standardLoad(self: profile): template | nil
+local function standardLoad(self: profile): template | boolean
 	for _ = 0, self.retries do
 		local success, result = pcall(self.dataStore.GetAsync, self.dataStore, self.key)
 		if success then
