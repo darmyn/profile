@@ -6,6 +6,7 @@ local template = require(script.template)
 local autoSaving = false
 local profile = {}
 profile.__index = profile
+profile.dataStore = dataStoreService:GetDataStore("profiles")
 profile.prefix = "profile"
 profile.retries = 3
 profile.active = {
@@ -13,25 +14,34 @@ profile.active = {
 	profiles = {} :: {[Player]: profile}
 }
 
-local function standardLoad(dataStore: DataStore, key: string): template.type | nil
-	for _ = 0, profile.retries do
-		local success, result = pcall(dataStore.GetAsync, dataStore, key)
+local function standardLoad(self: profile): template | nil
+	local dataStore = self.dataStore
+	for attempt = 0, self.retries do
+		print("tryng")
+		local success, result = pcall(self.dataStore.GetAsync, self.dataStore, self.key)
 		if success then
-			return result
+			if result then
+				return result
+			else
+				return template()
+			end
 		else
 			warn(result)
-			continue
 		end
 	end
-	return
+	self.player:Kick("We could not load your data at this time.")
+	return nil
 end
 
-function profile.new(player: Player, loader: ((DataStore, string) -> (template))?)
+function profile.new(player: Player, loader: ((profile) -> (template))?)
 	local self = setmetatable({}, profile)
 	self.player = player
 	self.key = ("%s_%d"):format(self.prefix, self.player.UserId)
-	self.dataStore = dataStoreService:GetDataStore("profiles", self.key)
-	self.data = (loader) and loader(self.dataStore, self.key) or standardLoad(self.dataStore, self.key)
+	self.data = (loader) and loader(self) or standardLoad(self)
+	if not self.data then
+		self.player:Kick("We could not load your data at this time.")
+		self:destroy()
+	end
 	self.shouldAutoSave = true
 	profile.active.amount += 1
 	profile.active.profiles[player] = self
@@ -49,13 +59,14 @@ function profile.autoSave(duration: number, cooldown: number)
 	if not autoSaving then
 		autoSaving = true
 		while autoSaving do
-			for _, currentProfile: profile in pairs(profile.active) do
+			for _, currentProfile: profile in pairs(profile.active.profiles) do
 				if currentProfile.shouldAutoSave then
+					print("autosaving")
 					task.spawn(currentProfile.save, currentProfile)
 					task.wait(duration / profile.active.amount)
 				end
 			end
-			task.wait(cooldown or 0)
+			task.wait(cooldown or 1)
 		end
 	end
 	return {
@@ -96,13 +107,15 @@ function profile.reconcile(self: profile, _recursiveMemory: reconcileRecursiveMe
 end
 
 function profile.save(self: profile)
-	for _ = 0, self.retries do
-		local success, result = pcall(self.dataStore.SetAsync, self.dataStore, self.key, self.data)
-		if success then
-			return
-		else
-			warn(result)
-			continue
+	if self.data then
+		for _ = 0, self.retries do
+			local success, result = pcall(self.dataStore.SetAsync, self.dataStore, self.key, self.data)
+			if success then
+				return
+			else
+				warn(result)
+				continue
+			end
 		end
 	end
 end
@@ -115,7 +128,7 @@ function profile.destroy(self: profile)
 	table.clear(self)
 end
 
-type template = template.type
+type template = template.Type
 type profile = typeof(profile.new(Instance.new("Player")))
 export type Type = profile
 
