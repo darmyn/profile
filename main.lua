@@ -16,7 +16,6 @@ profile.active = {
 
 local function standardLoad(self: profile): template | nil
 	for _ = 0, self.retries do
-		print("tryng")
 		local success, result = pcall(self.dataStore.GetAsync, self.dataStore, self.key)
 		if success then
 			if result then
@@ -60,7 +59,6 @@ function profile.autoSave(duration: number, cooldown: number)
 		while autoSaving do
 			for _, currentProfile: profile in pairs(profile.active.profiles) do
 				if currentProfile.shouldAutoSave then
-					print("autosaving")
 					task.spawn(currentProfile.save, currentProfile)
 					task.wait(duration / profile.active.amount)
 				end
