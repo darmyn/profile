@@ -1,7 +1,7 @@
 # Profile
 An ultra-lightweight datastore wrapper for the Roblox game engine.
 
-This module is designed to handle the basic neccessities for managing and utilizing datastores, while also offering a wide range of customizability. It's this virtue which allows for great power, even with it's lightweight nature. This will be greater explained as the tutorial continues.
+This module is designed to handle the basic neccessities for managing and utilizing datastores, while also offering a wide range of customizability. It's this virtue which makes this module powerful, even with it's lightweight nature.
 
 ---
 ### Creating a new profile
