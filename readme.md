@@ -14,9 +14,7 @@ local profile = Profile.new(player)
 
 You can optionally pass a custom load function which will replace the default loader.
 
-*this is just an example of how you would create a custom loader function. It does not follow the standard practices of loading data to keep it short and simple.*
-
-If you wish to view the default loader function, check the source code for a function named `standardLoader`.
+*this is just an example of how you would create a custom loader function. It does not follow the standard practices of loading data to keep it short and simple. If you wish to view the default loader function, check the source code for a function named `standardLoader`.*
 
 ```lua
 local profile = Profile.new(player, function(key: string)
@@ -89,8 +87,6 @@ This might be a weird idiom, but it's the way I like to structure the templates 
 ### Advanced example
 
 ```lua
-local players = game:GetService("Players")
-
 local Profile = require(script.profile)
 Profile.autoDisconnect()
 Profile.autoSave(120, 10)
@@ -106,5 +102,3 @@ local function playerAdded(player: Player)
   print(profile.data)
 end
 ```
-
-players.PlayerAdded:Connect(playerAdded)
