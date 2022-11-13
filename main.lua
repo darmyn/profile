@@ -113,7 +113,6 @@ function profile.save(self: profile)
 				return
 			else
 				warn(result)
-				continue
 			end
 		end
 	end
