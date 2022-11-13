@@ -106,14 +106,12 @@ function profile.reconcile(self: profile, _recursiveMemory: reconcileRecursiveMe
 end
 
 function profile.save(self: profile)
-	if self.data then
-		for _ = 0, self.retries do
-			local success, result = pcall(self.dataStore.SetAsync, self.dataStore, self.key, self.data)
-			if success then
-				return
-			else
-				warn(result)
-			end
+	for _ = 0, self.retries do
+		local success, result = pcall(self.dataStore.SetAsync, self.dataStore, self.key, self.data)
+		if success then
+			return
+		else
+			warn(result)
 		end
 	end
 end
