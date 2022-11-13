@@ -50,10 +50,13 @@ This might be a weird idiom, but it's the way I like to structure the templates 
 *You may modify any value with a check mark*
 
 - [x] `dataStore: DataStore` -> The data store object. Is equal to dataStoreService:GetDataStore("profiles") by default
+   - `Default = dataStoreService:GetDataStore("profiles")`
 
 - [x] `prefix: string` -> The prefix used to format an individual profiles `.key`
+   -  `Default = "profile"`
 
-- [x] `retries: number` -> The amount of times the module will re-attempt a failed process before cancellation. `Default = 3`
+- [x] `retries: number` -> The amount of times the module will re-attempt a failed process before cancellation. 
+   - `Default = 3`
 
 - [ ] `active: {amount: number, profiles: {[Player]: profile}}` -> keeps track of active profiles.
 
