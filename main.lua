@@ -77,6 +77,7 @@ function profile.autoDisconnect()
 	players.PlayerRemoving:Connect(function(player: Player)
 		local selectedProfile = profile.active.profiles[player]
 		if selectedProfile then
+			selectedProfile:save()
 			selectedProfile:destroy()
 		end
 	end)
