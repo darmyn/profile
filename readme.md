@@ -96,7 +96,7 @@ This might be a weird idiom, but it's the way I like to structure the templates 
 
 `profile:save()` -> saves the players data if there is any
 
-`profile:destroy()` -> Calls `:save()`, and cleans up to be garbage collected. Also turns the object into an empty table so it can no longer be used.
+`profile:destroy()` -> Removes internal references to allow the object to be garbage collected. Also transforms the object into an empty table rendering it useless.
 
 ---
 
