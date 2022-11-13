@@ -28,8 +28,7 @@ local profile = Profile.new(player, function (self: profile)
 			warn(result)
 		end
 	end
-	self.player:Kick("We could not load your data at this time.")
-	return nil
+	return false
 end
 ```
 
