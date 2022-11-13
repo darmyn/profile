@@ -105,7 +105,7 @@ This might be a weird idiom, but it's the way I like to structure the templates 
 ```lua
 local Profile = require(game.ReplicatedStorage.profile)
 Profile.autoDisconnect()
-Profile.autoSave(120, 10)
+task.spawn(Profile.autoSave, 120, 10)
 --Profile.dataStore = dataStoreService:GetDataStore("someOtherDataStore")
 -- technically you can change this before you initialize any of the profiles
 -- if you must have a unique data store name
