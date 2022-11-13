@@ -17,9 +17,9 @@ You can optionally pass a custom load function which will replace the default lo
 *this is just an example of how you would create a custom loader function. It does not follow the standard practices of loading data to keep it short and simple. If you wish to view the default loader function, check the source code for a function named `standardLoader`.*
 
 ```lua
-local profile = Profile.new(player, function(key: string)
-   local dataStore = profile.dataStore
-   dataStore:GetAsync(key)
+local profile = Profile.new(player, function(self: profile)
+   local dataStore = self.dataStore
+   dataStore:GetAsync(self.key)
 end
 ```
 
@@ -73,7 +73,7 @@ This might be a weird idiom, but it's the way I like to structure the templates 
 
 ### Class-level functions
 
-`profile.new(player: Player, loader: ((DataStore, string) -> (template))?)` -> Creates a new profile and loads the player's data.
+`profile.new(player: Player, loader: ((profile) -> (template))?)` -> Creates a new profile and loads the player's data.
 
 `profile.autoSave(duration: number, cooldown: number)` -> Begins the auto save process which will save all profiles loaded on the server within `duration` and will pause for `cooldown` until continuing the next itteration
 
@@ -85,9 +85,9 @@ This might be a weird idiom, but it's the way I like to structure the templates 
 
 `profile:reconcile()` -> makes sure the players data is up to date with the current template
 
-`profile:save()` -> saves the players data
+`profile:save()` -> saves the players data if there is any
 
-`profile:destroy()` -> saves the players data, and cleans up to be garbage collected. Also turns the object into an empty table so it can no longer be used.
+`profile:destroy()` -> Calls `:save()`, and cleans up to be garbage collected. Also turns the object into an empty table so it can no longer be used.
 
 ---
 
