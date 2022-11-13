@@ -12,13 +12,12 @@ It's very simple to create a new profile:
 local profile = Profile.new(player)
 ```
 
-You can optionally pass a custom load function which will replace the default loader. This is an example of using your own custom loader:
+You can optionally pass a custom load function which will replace the default loader. This is an example of using your own custom loader, however it is using the exact same code instilled within the default loader:
 
 ```lua
 local profile = Profile.new(player, function (self: profile)
 	local dataStore = self.dataStore
 	for attempt = 0, self.retries do
-		print("tryng")
 		local success, result = pcall(self.dataStore.GetAsync, self.dataStore, self.key)
 		if success then
 			if result then
@@ -85,7 +84,7 @@ This might be a weird idiom, but it's the way I like to structure the templates 
 
 ### Class-level functions
 
-`profile.new(player: Player, loader: ((profile) -> (template))?)` -> Creates a new profile and loads the player's data.
+`profile.new(player: Player, loader: ((profile) -> (template | nil))?)` -> Creates a new profile and loads the player's data.
 
 `profile.autoSave(duration: number, cooldown: number)` -> Begins the auto save process which will save all profiles loaded on the server within `duration` and will pause for `cooldown` until continuing the next itteration
 
