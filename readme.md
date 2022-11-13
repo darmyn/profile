@@ -116,7 +116,7 @@ Profile.retries = 5 --> default is 3
 
 local function playerAdded(player: Player)
 	local profile = Profile.new(player)
-	profile.reconcile()
+	profile:reconcile()
 	print(profile.data)
 end
 ```
