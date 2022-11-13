@@ -27,8 +27,7 @@ local function standardLoad(self: profile): template | nil
 			warn(result)
 		end
 	end
-	self.player:Kick("We could not load your data at this time.")
-	return nil
+	return false
 end
 
 function profile.new(player: Player, loader: ((profile) -> (template | nil))?)
@@ -37,8 +36,8 @@ function profile.new(player: Player, loader: ((profile) -> (template | nil))?)
 	self.key = ("%s_%d"):format(self.prefix, self.player.UserId)
 	self.data = (loader) and loader(self) or standardLoad(self)
 	if not self.data then
-		self.player:Kick("We could not load your data at this time.")
 		self:destroy()
+		return nil
 	end
 	self.shouldAutoSave = true
 	profile.active.amount += 1
@@ -121,8 +120,10 @@ function profile.save(self: profile)
 end
 
 function profile.destroy(self: profile)
-	profile.active.amount -= 1
-	profile.active.profiles[self.player] = nil
+	if profile.active.profiles[self.player] then
+		profile.active.amount -= 1
+		profile.active.profiles[self.player] = nil
+	end
 	setmetatable(self, nil)
 	table.clear(self)
 end
