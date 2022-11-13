@@ -47,25 +47,26 @@ return createTemplate
 This might be a weird idiom, but it's the way I like to structure the templates because it offers better type support. If you are confused by `export type Type = template` it's really just for syntax purposes as I like to be able to import a type from a module as `type = module.Type`. If this is still confusing to you, just don't worry about it it's really not that important.
 
 ### Class-level values
-This module offers a wide variety of customizability. At the class level, you can modify the following values:
+*You may modify any value with a check mark*
 
-`dataStore: DataStore` -> The data store object. Is equal to dataStoreService:GetDataStore("profiles") by default
+- [x] `dataStore: DataStore` -> The data store object. Is equal to dataStoreService:GetDataStore("profiles") by default
 
-`prefix: string` -> The prefix used to format an individual profiles `.key`
+- [x] `prefix: string` -> The prefix used to format an individual profiles `.key`
 
-`retries: number` -> The amount of times the module will re-attempt a failed process before cancellation. `Default = 3`
+- [x] `retries: number` -> The amount of times the module will re-attempt a failed process before cancellation. `Default = 3`
 
-`active: {amount: number, profiles: {[Player]: profile}}` -> keeps track of active profiles.
+- [ ] `active: {amount: number, profiles: {[Player]: profile}}` -> keeps track of active profiles.
 
 ### Object-level values
+*You may modify any value with a check mark*
 
-`player: Player` -> The player corresponding to the profile
+- [ ] `player: Player` -> The player corresponding to the profile
 
-`key: string` -> A concatenation of `"profile.prefix".."_"..player.UserId`
+- [ ] `key: string` -> A concatenation of `"profile.prefix".."_"..player.UserId`
 
-`data: template` -> The data which was loaded from the dataStore
+- [x] `data: template` -> The data which was loaded from the dataStore
 
-`shouldAutoSave: boolean` -> Signifies if this specific profile should be included in the autosaving process
+- [x] `shouldAutoSave: boolean` -> Signifies if this specific profile should be included in the autosaving process
 
 ### Class-level functions
 
