@@ -94,19 +94,19 @@ This might be a weird idiom, but it's the way I like to structure the templates 
 ### Advanced example
 
 ```lua
-local Profile = require(script.profile)
+local Profile = require(game.ReplicatedStorage.profile)
 Profile.autoDisconnect()
 Profile.autoSave(120, 10)
 --Profile.dataStore = dataStoreService:GetDataStore("someOtherDataStore")
 -- technically you can change this before you initialize any of the profiles
 -- if you must have a unique data store name
-profile.prefix = "someOtherPrefix" --> defaults to "profile" meaning all keys will be "profile_userId"
+Profile.prefix = "someOtherPrefix" --> defaults to "profile" meaning all keys will be "profile_userId"
 -- but in this case all the keys would now be "someOtherPrefix_userId"
-profile.retries = 5 --> default is 3
+Profile.retries = 5 --> default is 3
 
 local function playerAdded(player: Player)
-  local profile = Profile.new(player)
-  profile.reconcile()
-  print(profile.data)
+	local profile = Profile.new(player)
+	profile.reconcile()
+	print(profile.data)
 end
 ```
