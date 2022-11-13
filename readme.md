@@ -44,6 +44,8 @@ return createTemplate
 
 This might be a weird idiom, but it's the way I like to structure the templates because it offers better type support. If you are confused by `export type Type = template` it's really just for syntax purposes as I like to be able to import a type from a module as `type = module.Type`. If this is still confusing to you, just don't worry about it it's really not that important.
 
+---
+
 ### Class-level values
 *You may modify any value with a check mark*
 
@@ -84,6 +86,8 @@ This might be a weird idiom, but it's the way I like to structure the templates 
 
 `profile:destroy()` -> saves the players data, and cleans up to be garbage collected. Also turns the object into an empty table so it can no longer be used.
 
+---
+
 ### Advanced example
 
 ```lua
@@ -93,7 +97,8 @@ Profile.autoSave(120, 10)
 --Profile.dataStore = dataStoreService:GetDataStore("someOtherDataStore")
 -- technically you can change this before you initialize any of the profiles
 -- if you must have a unique data store name
-profile.prefix = "someOtherPrefix" --> defaults to "profile" meaning all keys will be "profile_<userId>" -- but in this case all the keys would now be "someOtherPrefix_<userId>"
+profile.prefix = "someOtherPrefix" --> defaults to "profile" meaning all keys will be "profile_userId"
+-- but in this case all the keys would now be "someOtherPrefix_userId"
 profile.retries = 5 --> default is 3
 
 local function playerAdded(player: Player)
