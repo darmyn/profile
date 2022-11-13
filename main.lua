@@ -30,7 +30,7 @@ local function standardLoad(self: profile): template | boolean
 	return false
 end
 
-function profile.new(player: Player, loader: ((profile) -> (template | nil))?)
+function profile.new(player: Player, loader: ((profile) -> (template | boolean))?)
 	local self = setmetatable({}, profile)
 	self.player = player
 	self.key = ("%s_%d"):format(self.prefix, self.player.UserId)
