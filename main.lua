@@ -117,6 +117,6 @@ end
 
 type template = template.type
 type profile = typeof(profile.new(Instance.new("Player")))
-export type type = profile
+export type Type = profile
 
 return profile
