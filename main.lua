@@ -114,7 +114,7 @@ function profile:destroy()
 end
 
 type template = template.type
-type profile = typeof(profile) & typeof(profile.new(Instance.new("Player")))
+type profile = typeof(profile.new(Instance.new("Player")))
 export type type = profile
 
 return profile
