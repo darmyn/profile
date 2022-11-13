@@ -4,7 +4,8 @@ local players = game:GetService("Players")
 local template = require(script.template)
 
 local autoSaving = false
-local profile = {} :: profile
+local profile = {}
+profile.__index = profile
 profile.prefix = "profile"
 profile.retries = 3
 profile.active = {
@@ -12,7 +13,7 @@ profile.active = {
 	profiles = {} :: {[Player]: profile}
 }
 
-local function standardLoad(dataStore: DataStore, key: string): template.type
+local function standardLoad(dataStore: DataStore, key: string): template.type | nil
 	for _ = 0, profile.retries do
 		local success, result = pcall(dataStore.GetAsync, dataStore, key)
 		if success then
@@ -22,14 +23,15 @@ local function standardLoad(dataStore: DataStore, key: string): template.type
 			continue
 		end
 	end
+	return
 end
 
-function profile.new(player: Player, loader: (DataStore, string) -> (template)?)
-	local self = setmetatable({}, {__index = profile})
+function profile.new(player: Player, loader: ((DataStore, string) -> (template))?)
+	local self = setmetatable({}, profile)
 	self.player = player
 	self.key = ("%s_%d"):format(self.prefix, self.player.UserId)
 	self.dataStore = dataStoreService:GetDataStore("profiles", self.key)
-	self.data = (loader) and loader(self.dataStore, self.key) or standardLoad(self.dataStore, self.key) :: template
+	self.data = (loader) and loader(self.dataStore, self.key) or standardLoad(self.dataStore, self.key)
 	self.shouldAutoSave = true
 	profile.active.amount += 1
 	profile.active.profiles[player] = self
@@ -77,13 +79,13 @@ type reconcileRecursiveMemory = {
 	templateDimension: {}
 }
 
-function profile:reconcile(_recursiveMemory: reconcileRecursiveMemory?)
+function profile.reconcile(self: profile, _recursiveMemory: reconcileRecursiveMemory?)
 	local dataDimension = (_recursiveMemory) and _recursiveMemory.dataDimension or self.data
 	local templateDimension = (_recursiveMemory) and _recursiveMemory.templateDimension or template()
 	for k, v in pairs(templateDimension) do
 		if typeof(v) == "table" then
 			local newDataDimension = dataDimension[k] or {}
-			profile:reconcile({
+			profile.reconcile({
 				dataDimension = newDataDimension,
 				templateDimension = v
 			})
@@ -93,7 +95,7 @@ function profile:reconcile(_recursiveMemory: reconcileRecursiveMemory?)
 	end
 end
 
-function profile:save()
+function profile.save(self: profile)
 	for _ = 0, self.retries do
 		local success, result = pcall(self.dataStore.SetAsync, self.dataStore, self.key, self.data)
 		if success then
@@ -105,7 +107,7 @@ function profile:save()
 	end
 end
 
-function profile:destroy()
+function profile.destroy(self: profile)
 	self:save()
 	profile.active.amount -= 1
 	profile.active.profiles[self.player] = nil
