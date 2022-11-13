@@ -5,6 +5,6 @@ local function createTemplate()
 end
 
 type template = typeof(createTemplate())
-export type type = template
+export type Type = template
 
 return createTemplate
