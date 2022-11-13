@@ -115,7 +115,11 @@ Profile.retries = 5 --> default is 3
 
 local function playerAdded(player: Player)
 	local profile = Profile.new(player)
-	profile:reconcile()
-	print(profile.data)
+	if profile then
+		profile:reconcile()
+		print(profile.data)
+	else
+		player:Kick("Failed to load data")
+	end
 end
 ```
