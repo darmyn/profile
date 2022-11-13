@@ -15,8 +15,7 @@ profile.active = {
 }
 
 local function standardLoad(self: profile): template | nil
-	local dataStore = self.dataStore
-	for attempt = 0, self.retries do
+	for _ = 0, self.retries do
 		print("tryng")
 		local success, result = pcall(self.dataStore.GetAsync, self.dataStore, self.key)
 		if success then
