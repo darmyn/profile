@@ -92,9 +92,11 @@ function profile.reconcile(self: profile, _recursiveMemory: reconcileRecursiveMe
 	local templateDimension = (_recursiveMemory) and _recursiveMemory.templateDimension or template()
 	for k, v in pairs(templateDimension) do
 		if typeof(v) == "table" then
-			local newDataDimension = dataDimension[k] or {}
-			profile.reconcile({
-				dataDimension = newDataDimension,
+			if not dataDimension[k] then
+				dataDimension[k] = {}
+			end
+			profile.reconcile(self, {
+				dataDimension = dataDimension[k],
 				templateDimension = v
 			})
 		elseif not dataDimension[k] then
@@ -118,7 +120,6 @@ function profile.save(self: profile)
 end
 
 function profile.destroy(self: profile)
-	self:save()
 	profile.active.amount -= 1
 	profile.active.profiles[self.player] = nil
 	setmetatable(self, nil)
