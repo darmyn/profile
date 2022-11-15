@@ -6,6 +6,7 @@ local template = require(script.template)
 local autoSaving = false
 local profile = {}
 profile.__index = profile
+profile.sessionLock = true
 profile.dataStore = dataStoreService:GetDataStore("profiles")
 profile.prefix = "profile"
 profile.retries = 3
@@ -16,7 +17,9 @@ profile.active = {
 
 local function standardLoad(self: profile): template | boolean
 	for _ = 0, self.retries do
-		local success, result = pcall(self.dataStore.GetAsync, self.dataStore, self.key)
+		local success, result = pcall(self.dataStore.UpdateAsync, self.dataStore, function(current: template, keyInfo: DataStoreKeyInfo)
+			keyInfo:GetMetadata()
+		end)
 		if success then
 			if result then
 				return result
@@ -30,7 +33,7 @@ local function standardLoad(self: profile): template | boolean
 	return false
 end
 
-function profile.new(player: Player, loader: ((profile) -> (template | boolean))?)
+function profile.new(player: Player, loader: ((profile) -> (template | nil))?)
 	local self = setmetatable({}, profile)
 	self.player = player
 	self.key = ("%s_%d"):format(self.prefix, self.player.UserId)
@@ -55,15 +58,17 @@ end
 function profile.autoSave(duration: number, cooldown: number)
 	if not autoSaving then
 		autoSaving = true
-		while autoSaving do
-			for _, currentProfile: profile in pairs(profile.active.profiles) do
-				if currentProfile.shouldAutoSave then
-					task.spawn(currentProfile.save, currentProfile)
-					task.wait(duration / profile.active.amount)
+		task.spawn(function()
+			while autoSaving do
+				for _, currentProfile: profile in pairs(profile.active.profiles) do
+					if currentProfile.shouldAutoSave then
+						task.spawn(currentProfile.save, currentProfile)
+						task.wait(duration / profile.active.amount)
+					end
 				end
+				task.wait(cooldown or 1)
 			end
-			task.wait(cooldown or 1)
-		end
+		end)
 	end
 	return {
 		cancel = function()
@@ -83,8 +88,8 @@ function profile.autoDisconnect()
 end
 
 type reconcileRecursiveMemory = {
-	dataDimension: {},
-	templateDimension: {}
+	dataDimension: {[string]: any},
+	templateDimension: {[string]: any}
 }
 
 function profile.reconcile(self: profile, _recursiveMemory: reconcileRecursiveMemory?)
@@ -125,8 +130,8 @@ function profile.destroy(self: profile)
 	table.clear(self)
 end
 
-type template = template.Type
 type profile = typeof(profile.new(Instance.new("Player")))
+export type template = template.Type
 export type Type = profile
 
 return profile
