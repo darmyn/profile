@@ -17,9 +17,7 @@ profile.active = {
 
 local function standardLoad(self: profile): template | boolean
 	for _ = 0, self.retries do
-		local success, result = pcall(self.dataStore.UpdateAsync, self.dataStore, function(current: template, keyInfo: DataStoreKeyInfo)
-			keyInfo:GetMetadata()
-		end)
+		local success, result = pcall(self.dataStore.GetAsync, self.dataStore)
 		if success then
 			if result then
 				return result
