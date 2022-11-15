@@ -84,7 +84,7 @@ This might be a weird idiom, but it's the way I like to structure the templates 
 
 `profile.new(player: Player, loader: ((profile) -> (template | nil))?)` -> Creates a new profile and loads the player's data.
 
-**[Yields]** `profile.autoSave(duration: number, cooldown: number)` -> Begins the auto save process which will save all profiles loaded on the server within `duration` and will pause for `cooldown` until continuing the next itteration
+`profile.autoSave(duration: number, cooldown: number)` -> Begins the auto save process which will save all profiles loaded on the server within `duration` and will pause for `cooldown` until continuing the next itteration
 
 *To be more clear, this means if you set the duration to `120` and there are 16 profiles loaded on the server, it will save someones profile every 7.5 seconds*
 
@@ -105,7 +105,7 @@ This might be a weird idiom, but it's the way I like to structure the templates 
 ```lua
 local Profile = require(game.ReplicatedStorage.profile)
 Profile.autoDisconnect()
-task.spawn(Profile.autoSave, 120, 10)
+Profile.autoSave(120, 10)
 --Profile.dataStore = dataStoreService:GetDataStore("someOtherDataStore")
 -- technically you can change this before you initialize any of the profiles
 -- if you must have a unique data store name
